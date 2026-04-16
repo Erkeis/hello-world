@@ -1,9 +1,21 @@
 // [Intent] Orchestrator API for broadcasting and managing agentic behavioral intents across the farm. (2025-04-16)
 const express = require('express');
 const { injectIntent } = require('./lib/intent-manager');
+const { getLatestAgentUpdates } = require('./lib/git-monitor');
 
 const app = express();
 app.use(express.json());
+
+// [Intent] Expose agent status updates derived from Git commit history. (2025-04-16)
+app.get('/status', async (req, res) => {
+  try {
+    const updates = await getLatestAgentUpdates();
+    res.send(updates);
+  } catch (error) {
+    // [Intent] Gracefully handle and report Git monitoring failures. (2025-04-16)
+    res.status(500).send({ error: 'Failed to fetch status', details: error.message });
+  }
+});
 
 app.post('/broadcast', async (req, res) => {
   const { role, task } = req.body;
