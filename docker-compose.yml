@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  sec-forge:
+    container_name: sec-forge
+    image: node:20-slim
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
+  qa-scout:
+    container_name: qa-scout
+    image: node:20-slim
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
+  front-pilot:
+    container_name: front-pilot
+    image: node:20-slim
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
