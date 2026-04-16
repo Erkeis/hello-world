@@ -11,9 +11,9 @@ const git = simpleGit(path.join(__dirname, '../../'));
  */
 async function getLatestAgentUpdates() {
   try {
-    const log = await git.log({ n: 10 });
-    // [Intent] Filter only commits that follow the 'agent/' reporting convention. (2025-04-16)
-    return log.all.filter(commit => commit.message.startsWith('agent/'));
+    // [Intent] Directly fetch up to 100 agent-specific commits using Git grep for efficiency and robustness. (2025-04-16)
+    const log = await git.log({ n: 100, '--grep': '^agent/' });
+    return log.all;
   } catch (error) {
     // [Intent] Ensure errors in Git operations don't crash the orchestrator. (2025-04-16)
     throw new Error(`Git monitor failure: ${error.message}`);
