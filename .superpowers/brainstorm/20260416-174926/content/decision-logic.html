@@ -1,0 +1,81 @@
+<h2>The "PM/CEO" Decision Logic</h2>
+<p class="subtitle">How the Orchestrator balances Subagent reports with Shareholder (User) commands</p>
+
+<div class="section">
+  <div class="mockup">
+    <div class="mockup-header">Orchestration State Machine</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: grid; grid-template-columns: 1fr 100px 1fr; gap: 20px; align-items: center;">
+        <!-- Left Column: Inputs -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="border: 2px solid var(--accent); padding: 10px; border-radius: 4px; background: rgba(var(--accent-rgb), 0.1);">
+            <strong>User Message (High Priority)</strong><br>
+            <span style="font-size: 0.8em;">"Change requirements", "Stop all", "Status check"</span>
+          </div>
+          <div style="border: 1px solid var(--border); padding: 10px; border-radius: 4px;">
+            <strong>Subagent Reports (Async)</strong><br>
+            <span style="font-size: 0.8em;">"Backend Done", "Frontend Error", "QA Pending"</span>
+          </div>
+        </div>
+
+        <!-- Middle: Orchestrator Logic -->
+        <div style="text-align: center;">
+          <div style="font-size: 2em;">➔</div>
+          <div style="font-weight: bold; margin-top: 10px;">The Hub<br>(PM/CEO)</div>
+          <div style="font-size: 0.8em; color: var(--subtitle); font-style: italic;">Evaluation Loop</div>
+        </div>
+
+        <!-- Right Column: Outputs -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="border: 2px solid var(--success); padding: 10px; border-radius: 4px;">
+            <strong>Objective Met?</strong><br>
+            <span style="font-size: 0.8em;">Commit Work -> Broadcast Success -> Assign Next Goal</span>
+          </div>
+          <div style="border: 2px solid var(--error); padding: 10px; border-radius: 4px;">
+            <strong>Conflict/Gap?</strong><br>
+            <span style="font-size: 0.8em;">Request Clarification -> Adjust Intent -> Notify User</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Who should have the 'Final Word' on Objective Achievement?</h3>
+<p class="subtitle">Designing the verification layer for the Agent Farm</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Automated "Quality Gates"</h3>
+      <p>Orchestrator runs automated tests/linters. If they fail, the Subagent is told to "Try again" without ever bothering you.</p>
+      <ul style="font-size: 0.9em; margin-top: 10px;">
+        <li>✅ Maximum scale; you only see finished work</li>
+        <li>❌ Hard to automate "Taste" or subjective goals</li>
+      </ul>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>CEO Approval (Manual)</h3>
+      <p>Orchestrator gathers all subagent artifacts and presents a "Consolidated Report". Nothing is finalized until you click [Approve].</p>
+      <ul style="font-size: 0.9em; margin-top: 10px;">
+        <li>✅ Perfect control over quality and "Taste"</li>
+        <li>❌ You remain a partial bottleneck for flow</li>
+      </ul>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Hierarchical Delegation</h3>
+      <p>A "Lead Agent" (Sub-PM) reviews the work of others. Only major milestones or unsolvable conflicts are escalated to the User.</p>
+      <ul style="font-size: 0.9em; margin-top: 10px;">
+        <li>✅ Best of both worlds; mimics a real team</li>
+        <li>❌ Most complex to implement and debug</li>
+      </ul>
+    </div>
+  </div>
+</div>
