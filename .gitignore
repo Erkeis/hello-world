@@ -2,3 +2,5 @@
 *.ps1
 server.log
 node_modules/
+.agent/
+docs/knowledge-assets/.worktrees/
