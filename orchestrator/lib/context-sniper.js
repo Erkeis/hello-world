@@ -1,5 +1,4 @@
 // [Intent] Provides O(1) writing and efficient tag-based filtering for decision logs to inject historical context into agent intents. (2025-04-18)
-const fs = require('fs').promises;
 const path = require('path');
 const readline = require('readline');
 const { createReadStream } = require('fs');

@@ -17,7 +17,7 @@ async function injectIntent(role, task, additionalTags = []) {
   const sanitizedRole = role.replace(/[^a-zA-Z0-9-]/g, '');
   
   // [Intent] Automatically extract tags from task description (e.g., #security) to ensure context relevance.
-  const extractedTags = task.match(/#[a-zA-Z0-9]+/g) || [];
+  const extractedTags = task.match(/#[\w-]+/g) || [];
   const tags = [...new Set([...extractedTags, ...additionalTags])];
 
   // [Intent] Fetch historical context based on tags to empower the agent with "why" and "past decisions".
@@ -35,6 +35,9 @@ async function injectIntent(role, task, additionalTags = []) {
   const tempPath = `${filePath}.tmp`;
 
   try {
+    // [Intent] Ensure the shared context directory exists before writing to prevent ENOENT errors.
+    await fs.mkdir(SHARED_PATH, { recursive: true });
+
     // [Intent] Use Atomic Write Pattern (Write to Temp -> Rename) to prevent race conditions where agents might read a partially written file.
     await fs.writeFile(tempPath, JSON.stringify(intent, null, 2));
     await fs.rename(tempPath, filePath);

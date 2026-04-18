@@ -1,0 +1,15 @@
+  {{NAME}}:
+    container_name: {{NAME}}
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "{{PORT}}:{{PORT}}"
+    environment:
+      - IDENTITY={{NAME}}
+      - ROLE={{ROLE}}
+      - PORT={{PORT}}
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
