@@ -68,19 +68,28 @@ app.post('/broadcast', async (req, res) => {
 });
 
 // [Intent] API endpoint for Stakeholder (User) to approve a pending agent proposal. (2026-04-18)
+const { setStatusApproved } = require('./lib/intent-manager');
+const { agileReset } = require('./lib/session-manager');
+
 app.post('/agent/:id/approve', async (req, res) => {
   const { id } = req.params;
-  // [Intent] This would update the intent.json status to 'APPROVED' via intentManager.
-  console.log(`[Orchestrator] User approved agent: ${id}`);
-  res.send({ status: 'APPROVED', agentId: id });
+  const result = await setStatusApproved(id);
+  if (result.success) {
+    res.send({ status: 'APPROVED', agentId: id });
+  } else {
+    res.status(404).send({ error: result.error });
+  }
 });
 
 // [Intent] API endpoint to trigger a manual session reset and re-provisioning of an agent. (2026-04-18)
 app.post('/agent/:id/provision', async (req, res) => {
   const { id } = req.params;
-  // [Intent] This will call sessionManager.agileReset(id) in Task 4.
-  console.log(`[Orchestrator] Manual re-provision triggered for agent: ${id}`);
-  res.send({ status: 'PROVISIONING_STARTED', agentId: id });
+  const result = await agileReset(id);
+  if (result.success) {
+    res.send({ status: 'PROVISIONING_STARTED', agentId: id });
+  } else {
+    res.status(500).send({ error: "Failed to reset agent", details: result.error });
+  }
 });
 
 app.listen(config.port, () => console.log(`Orchestrator API running on port ${config.port}`));

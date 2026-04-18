@@ -65,4 +65,26 @@ async function injectIntent(role, task, additionalTags = []) {
   }
 }
 
-module.exports = { injectIntent };
+/**
+ * Updates an existing intent status to APPROVED.
+ * @param {string} role - The role/agentId.
+ */
+async function setStatusApproved(role) {
+  const sanitizedRole = role.replace(/[^a-zA-Z0-9-]/g, '');
+  const filePath = path.join(SHARED_PATH, `intent-${sanitizedRole}.json`);
+  
+  if (require('fs').existsSync(filePath)) {
+    const content = await fs.readFile(filePath, 'utf8');
+    const intent = JSON.parse(content);
+    intent.status = 'APPROVED';
+    
+    const tempPath = `${filePath}.tmp`;
+    await fs.writeFile(tempPath, JSON.stringify(intent, null, 2));
+    await fs.rename(tempPath, filePath);
+    console.log(`[Orchestrator] Intent status updated to APPROVED for ${sanitizedRole}`);
+    return { success: true };
+  }
+  return { success: false, error: 'Intent file not found' };
+}
+
+module.exports = { injectIntent, setStatusApproved };
