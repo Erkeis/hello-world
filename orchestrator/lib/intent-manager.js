@@ -23,11 +23,23 @@ async function injectIntent(role, task, additionalTags = []) {
   // [Intent] Fetch historical context based on tags to empower the agent with "why" and "past decisions".
   const context = await snipeContext(tags);
 
+  // [Intent] Assign risk level (1-3) based on task keywords to enable tiered approval. (2026-04-18)
+  let riskLevel = 1; // Default: Low (Auto-approve)
+  const taskLower = task.toLowerCase();
+  if (taskLower.includes('fix') || taskLower.includes('add test') || taskLower.includes('lint')) {
+    riskLevel = 2; // Medium: Notify (Implicit)
+  }
+  if (taskLower.includes('refactor') || taskLower.includes('delete') || taskLower.includes('architecture') || taskLower.includes('logic')) {
+    riskLevel = 3; // High: Manual Gate (Explicit Approval)
+  }
+
   const intent = {
     role: sanitizedRole,
     task,
     tags,
     context,
+    riskLevel,
+    status: riskLevel === 3 ? 'PENDING_APPROVAL' : 'APPROVED',
     timestamp: new Date().toISOString()
   };
 
