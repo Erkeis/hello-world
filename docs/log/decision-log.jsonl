@@ -1,4 +1,4 @@
-{"timestamp": "2026-04-16T10:00:00Z", "decision": "Use Node.js for orchestrator", "tags": ["#backend", "#core"]}
-{"timestamp": "2026-04-16T11:00:00Z", "decision": "Use React for dashboard", "tags": ["#frontend", "#ui"]}
-{"timestamp": "2026-04-17T09:00:00Z", "decision": "Implement Git monitoring via chokidar", "tags": ["#backend", "#git"]}
-{"timestamp": "2026-04-18T14:00:00Z", "decision": "Add context sniper for Phase 3", "tags": ["#core", "#context"]}
+{"date": "2026-04-16", "tags": ["#security", "#auth"], "decision": "Use simple secret token for initial dashboard API authentication."}
+{"date": "2026-04-17", "tags": ["#infrastructure", "#docker"], "decision": "Migrate to Docker Compose V2 for Ubuntu 24.04 compatibility."}
+{"date": "2026-04-17", "tags": ["#frontend", "#perf"], "decision": "Implement React Context and React.memo to isolate agent cell re-renders."}
+{"date": "2026-04-18", "tags": ["#governance", "#tags"], "decision": "Enforce mandatory #tagging for all entries in decision-log.jsonl."}

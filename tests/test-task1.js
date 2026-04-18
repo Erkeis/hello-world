@@ -1,41 +1,36 @@
+// tests/test-task1.js
 const { injectIntent } = require('../orchestrator/lib/intent-manager');
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 
 async function runTest() {
-  console.log('--- Testing Task 1: Intelligence Core ---');
+  console.log('🧪 Testing Task 1: Intelligence Core...');
   
   const role = 'tester';
-  const task = 'Verify frontend and backend integration #frontend #backend';
+  const task = 'Perform security audit for #security module.';
   
   const result = await injectIntent(role, task);
   
   if (result.success) {
-    const filePath = path.join(__dirname, '../shared-context', `intent-${role}.json`);
-    const content = await fs.readFile(filePath, 'utf8');
-    const intent = JSON.parse(content);
+    console.log('✅ Intent injected successfully.');
     
-    console.log('Intent injected successfully.');
-    console.log('Extracted Tags:', intent.tags);
-    console.log('Context Entries Found:', intent.context.length);
-    
-    if (intent.tags.includes('#frontend') && intent.tags.includes('#backend')) {
-      console.log('SUCCESS: Tags extracted correctly.');
+    const intentPath = path.join(__dirname, '../shared-context/intent-tester.json');
+    if (fs.existsSync(intentPath)) {
+      const intent = JSON.parse(fs.readFileSync(intentPath, 'utf8'));
+      console.log('📦 Injected Tags:', intent.tags);
+      console.log('🧠 Sniped Context Count:', intent.context.length);
+      
+      if (intent.tags.includes('#security') && intent.context.length > 0) {
+        console.log('🎉 TEST PASSED: Context sniped based on tags!');
+      } else {
+        console.error('❌ TEST FAILED: Context or tags missing.');
+      }
     } else {
-      console.error('FAILURE: Tags not extracted correctly.');
-    }
-    
-    if (intent.context.length > 0) {
-      console.log('SUCCESS: Context injected.');
-      intent.context.forEach(entry => {
-        console.log(` - [${entry.tags.join(', ')}] ${entry.decision}`);
-      });
-    } else {
-      console.error('FAILURE: No context injected.');
+      console.error('❌ TEST FAILED: intent-tester.json not found.');
     }
   } else {
-    console.error('FAILURE: Intent injection failed:', result.error);
+    console.error('❌ TEST FAILED:', result.error);
   }
 }
 
-runTest().catch(console.error);
+runTest();

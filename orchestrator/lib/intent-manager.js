@@ -21,7 +21,8 @@ async function injectIntent(role, task, additionalTags = []) {
   const tags = [...new Set([...extractedTags, ...additionalTags])];
 
   // [Intent] Fetch historical context based on tags to empower the agent with "why" and "past decisions".
-  const context = await snipeContext(tags);
+  const LOG_PATH = path.join(__dirname, '../../docs/log/decision-log.jsonl');
+  const context = await snipeContext(LOG_PATH, tags);
 
   // [Intent] Assign risk level (1-3) based on task keywords to enable tiered approval. (2026-04-18)
   let riskLevel = 1; // Default: Low (Auto-approve)
