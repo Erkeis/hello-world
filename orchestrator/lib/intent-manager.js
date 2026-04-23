@@ -10,9 +10,11 @@ const SHARED_PATH = path.join(__dirname, '../../shared-context');
  * @param {string} role - The role of the agent (sanitized to alphanumeric and hyphens).
  * @param {string} task - The task description.
  * @param {string[]} additionalTags - Optional explicit tags.
+ * @param {string} mode - Optional execution mode (READ_ONLY or READ_WRITE).
+ * @param {string} response_schema - Optional response schema name.
  * @returns {Promise<{success: boolean, error?: string}>}
  */
-async function injectIntent(role, task, additionalTags = []) {
+async function injectIntent(role, task, additionalTags = [], mode = 'READ_ONLY', response_schema = 'STANDARD_REPORT') {
   // [Intent] Sanitize role to prevent path traversal attacks by restricting characters to alphanumeric and hyphens.
   const sanitizedRole = role.replace(/[^a-zA-Z0-9-]/g, '');
   
@@ -40,6 +42,8 @@ async function injectIntent(role, task, additionalTags = []) {
     tags,
     context,
     riskLevel,
+    mode,
+    response_schema,
     status: riskLevel === 3 ? 'PENDING_APPROVAL' : 'APPROVED',
     timestamp: new Date().toISOString()
   };

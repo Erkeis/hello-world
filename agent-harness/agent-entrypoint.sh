@@ -24,11 +24,23 @@ echo "🛠️ Capability Detected: $AGENT_TOOL"
 dispatch_sub_intent() {
     local target_role=$1
     local task=$2
+    local mode=${3:-""}
+    local schema=${4:-"STANDARD_REPORT"}
+
+    # [Intent] Task-Type Logic: Auto-select mode based on task keywords if not explicitly provided.
+    if [ -z "$mode" ]; then
+        if [[ "$task" =~ "fix" ]] || [[ "$task" =~ "implement" ]] || [[ "$task" =~ "add" ]] || [[ "$task" =~ "modify" ]]; then
+            mode="READ_WRITE"
+        else
+            mode="READ_ONLY"
+        fi
+    fi
+
     # [Intent] Use host.docker.internal to reach the host-bound orchestrator from inside the container.
     # Note: host.docker.internal works on Docker Desktop (Windows/Mac) and can be configured on Linux.
     curl -s -X POST http://host.docker.internal:3000/broadcast \
          -H "Content-Type: application/json" \
-         -d "{\"role\": \"$target_role\", \"task\": \"$task\"}"
+         -d "{\"role\": \"$target_role\", \"task\": \"$task\", \"mode\": \"$mode\", \"response_schema\": \"$schema\"}"
 }
 
 run_task() {

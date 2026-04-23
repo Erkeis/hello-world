@@ -49,7 +49,7 @@ app.get('/status', async (req, res) => {
 });
 
 app.post('/broadcast', async (req, res) => {
-  const { role, task } = req.body;
+  const { role, task, mode, response_schema } = req.body;
 
   // [Intent] Validate that 'role' and 'task' are present and are strings to ensure data integrity.
   if (!role || typeof role !== 'string' || !task || typeof task !== 'string') {
@@ -58,7 +58,7 @@ app.post('/broadcast', async (req, res) => {
     });
   }
 
-  const result = await injectIntent(role, task);
+  const result = await injectIntent(role, task, [], mode, response_schema);
 
   if (result.success) {
     res.send({ status: 'Intent Dispatched', role });
