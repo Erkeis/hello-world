@@ -1,12 +1,63 @@
 # Project Change Log: Agentic Environment Farm
 
 ## [2026-04-16] Phase 1: Core Engine & UI Scaffold 구축
-(Previous entries...)
+
+### 🎯 주요 목표
+- 다중 컨테이너 기반 에이전트 오케스트레이션 기초 환경 구축
+- 'Identity + Role' 기반의 네이밍 전략 및 명령(Intent) 주입 체계 수립
+- Git 커밋 Grep 방식의 상향식 보고(Feedback Loop) 구현
+- 12개 에이전트 가시화를 위한 'War Room' 그리드 UI 스캐폴딩
+
+### 🛠️ 구현 세부 사항
+#### 1. 에이전트 환경 및 시뮬레이션
+- **도커 환경 정비**: `sec-forge`, `qa-scout`, `front-pilot` 등 정체성 기반 컨테이너 명명 규칙 적용.
+- **공유 볼륨 설정**: 호스트와 컨테이너 간 `shared-context` 및 Git 레포지토리 공유.
+- **에이전트 하네스**: 의도 파일을 감시하고 작업 후 `agent/name[role]: message` 형식으로 자동 커밋하는 시뮬레이션 스크립트 작성.
+- **크로스 플랫폼 대응**: 리눅스 컨테이너 구동을 위한 LF 줄바꿈 강제 및 실행 권한 설정.
+
+#### 2. 오케스트레이터 코어
+- **기술 스택**: Node.js + Express 기반 비동기 API 서버.
+- **의도 주입(Intent Injection)**: `POST /broadcast`를 통해 특정 역할에 타겟팅된 `intent-{role}.json` 파일을 생성하는 로직 구현.
+- **보안 및 안정성**: 파일 경로 탐색 공격 방지(Sanitization), 입력값 검증, 예외 처리(Try-Catch) 적용.
+
+#### 3. Git 기반 피드백 리스너
+- **상태 모니터링**: `simple-git`을 활용하여 에이전트의 작업 커밋을 실시간 분석.
+- **효율적인 필터링**: Git의 내부 `--grep` 기능을 사용하여 `agent/` 접두사가 붙은 커밋만 100개까지 추출.
+- **상태 API**: 대시보드 연동을 위한 `GET /status` 엔드포인트 제공.
+
+#### 4. 워룸 대시보드 스캐폴딩
+- **기술 스택**: React + TypeScript + Vite.
+- **그리드 레이아웃**: 12개 에이전트의 상태를 한눈에 볼 수 있는 4x3 반응형 그리드 UI 구축.
 
 ---
 
 ## [2026-04-17] Phase 2: Agentic Neural Network & Scaling 구축 완료
-(Previous entries...)
+
+### 🎯 주요 목표
+- 12개 에이전트 실시간 로그 스트리밍(SSE) 및 가시화
+- 병렬 작업 충돌 방지를 위한 브랜치 격리 및 자동 머지 시스템 구축
+- 12개 에이전트 인프라 자동 생성을 위한 'Agent Factory' 구현
+- 고성능 대시보드 최적화 (React Context + Memoization)
+
+### 🛠️ 구현 세부 사항
+#### 1. 실시간 신경망 (SSE Backend)
+- **통합 로그 버스**: 12개 로그 파일을 하나의 SSE 스트림으로 병합하는 `LogStreamer` 구현.
+- **리소스 최적화**: `readline` 기반의 메모리 효율적 스트리밍 및 클라이언트 해제 시 명시적 리소스 cleanup 로직 적용.
+- **Race Condition 방지**: 파일 오프셋 동기화 처리를 통해 로그 중복 발생 차단.
+
+#### 2. 병렬 작업 동기화 (Concurrency)
+- **Branch Isolation**: 각 에이전트가 `agent/$NAME` 브랜치에서 독립적으로 작업하도록 하네스 및 오케스트레이터 개편.
+- **Fail-Fast 머지 큐**: 순차적 머지 처리를 통해 Git Index Lock 방지 및 충돌 시 즉시 에이전트 동결(`.blocked`) 처리.
+- **상태 브릿지**: 오케스트레이터와 컨테이너 간의 실시간 중단 신호 전달 체계 완성.
+
+#### 3. 인터랙티브 대시보드 (Visual Trust)
+- **그리드 확장**: 12개 에이전트 대응 4x3 반응형 그리드 및 실시간 로그 윈도잉(200줄 제한) 구현.
+- **UI 최적화**: `React.memo` 및 개별 에이전트 컨텍스트 적용으로 고주파 로그 발생 시에도 부드러운 렌더링 유지.
+- **알림 시스템**: 머지 충돌 등 이상 발생 시 시각적 펄스 및 청각적 비프음 알림 기능 탑재.
+
+#### 4. 에이전트 팩토리 (Automation)
+- **인프라 제네레이터**: `agents.json` 명부 기반의 `docker-compose.yml` 자동 생성 CLI 도구 구축.
+- **도커 최적화**: `Agent.Dockerfile` 도입으로 에이전트 기동 및 빌드 속도 획기적 개선.
 
 ---
 

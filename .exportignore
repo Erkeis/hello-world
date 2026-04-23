@@ -1,0 +1,22 @@
+# Agentic Farm Export Ignore List (v1.0)
+# [Intent] Defines files to be excluded from /exprj while maintaining management capability in the root.
+
+# 1. Management Harnesses (Layer 1 - Stay in Root)
+.agent/
+.worktrees/
+.superpowers/
+docs/log/
+docs/superpowers/plans/
+GEMINI.md
+Strategy of Container Identification and Naming.md
+
+# 2. Transient Operational Data
+shared-context/*.log
+shared-context/*.blocked
+shared-context/*.tmp
+orchestrator/.env
+
+# 3. Environment Specifics
+node_modules/
+dashboard/dist/
+*.ps1
