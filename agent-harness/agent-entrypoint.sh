@@ -81,12 +81,38 @@ while true; do
         fi
 
         if [ "$STATUS" == "APPROVED" ]; then
+            MODE=$(jq -r '.mode // "READ_WRITE"' "$INTENT_FILE")
             TASK=$(jq -r '.task' "$INTENT_FILE")
             # Write bundled context to a temporary file for the CLI tool to consume
             CONTEXT_FILE="/tmp/context.json"
             jq -r '.context' "$INTENT_FILE" > "$CONTEXT_FILE"
+
+            # [Intent] Physical Sandboxing: Strip write permissions if mode is READ_ONLY.
+            # We must preserve write access to the log file and .git for the harness to function.
+            if [ "$MODE" == "READ_ONLY" ]; then
+                echo "🔒 Read-Only Mode Active. Sandboxing /app/repo..."
+                # [Intent] Ensure log file exists before we lock the directory.
+                touch "/app/repo/work-${IDENTITY}.log"
+                # [Intent] Setup trap to ensure permissions are restored even on crash or exit.
+                trap 'chmod -R u+w /app/repo 2>/dev/null' EXIT
+                
+                chmod -R a-w /app/repo
+                # Restore write permission for .git so the harness can commit logs
+                if [ -d "/app/repo/.git" ]; then
+                    chmod -R u+w /app/repo/.git
+                fi
+                # Ensure log file is writable
+                chmod u+w "/app/repo/work-${IDENTITY}.log"
+            fi
             
             run_task "$TASK" "$CONTEXT_FILE"
+
+            # [Intent] Restore permissions after task completion.
+            if [ "$MODE" == "READ_ONLY" ]; then
+                echo "🔓 Task finished. Restoring permissions..."
+                chmod -R u+w /app/repo
+                trap - EXIT
+            fi
             
             # [Intent] Clear intent to prevent re-execution, but keep the file for inotify.
             truncate -s 0 "$INTENT_FILE"
