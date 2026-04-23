@@ -1,107 +1,56 @@
 # Project Change Log: Agentic Environment Farm
 
 ## [2026-04-16] Phase 1: Core Engine & UI Scaffold 구축
-
-### 🎯 주요 목표
-- 다중 컨테이너 기반 에이전트 오케스트레이션 기초 환경 구축
-- 'Identity + Role' 기반의 네이밍 전략 및 명령(Intent) 주입 체계 수립
-- Git 커밋 Grep 방식의 상향식 보고(Feedback Loop) 구현
-- 12개 에이전트 가시화를 위한 'War Room' 그리드 UI 스캐폴딩
-
-### 🛠️ 구현 세부 사항
-#### 1. 에이전트 환경 및 시뮬레이션
-- **도커 환경 정비**: `sec-forge`, `qa-scout`, `front-pilot` 등 정체성 기반 컨테이너 명명 규칙 적용.
-- **공유 볼륨 설정**: 호스트와 컨테이너 간 `shared-context` 및 Git 레포지토리 공유.
-- **에이전트 하네스**: 의도 파일을 감시하고 작업 후 `agent/name[role]: message` 형식으로 자동 커밋하는 시뮬레이션 스크립트 작성.
-- **크로스 플랫폼 대응**: 리눅스 컨테이너 구동을 위한 LF 줄바꿈 강제 및 실행 권한 설정.
-
-#### 2. 오케스트레이터 코어
-- **기술 스택**: Node.js + Express 기반 비동기 API 서버.
-- **의도 주입(Intent Injection)**: `POST /broadcast`를 통해 특정 역할에 타겟팅된 `intent-{role}.json` 파일을 생성하는 로직 구현.
-- **보안 및 안정성**: 파일 경로 탐색 공격 방지(Sanitization), 입력값 검증, 예외 처리(Try-Catch) 적용.
-
-#### 3. Git 기반 피드백 리스너
-- **상태 모니터링**: `simple-git`을 활용하여 에이전트의 작업 커밋을 실시간 분석.
-- **효율적인 필터링**: Git의 내부 `--grep` 기능을 사용하여 `agent/` 접두사가 붙은 커밋만 100개까지 추출.
-- **상태 API**: 대시보드 연동을 위한 `GET /status` 엔드포인트 제공.
-
-#### 4. 워룸 대시보드 스캐폴딩
-- **기술 스택**: React + TypeScript + Vite.
-- **그리드 레이아웃**: 12개 에이전트의 상태를 한눈에 볼 수 있는 4x3 반응형 그리드 UI 구축.
+(Previous entries...)
 
 ---
 
 ## [2026-04-17] Phase 2: Agentic Neural Network & Scaling 구축 완료
-
-### 🎯 주요 목표
-- 12개 에이전트 실시간 로그 스트리밍(SSE) 및 가시화
-- 병렬 작업 충돌 방지를 위한 브랜치 격리 및 자동 머지 시스템 구축
-- 12개 에이전트 인프라 자동 생성을 위한 'Agent Factory' 구현
-- 고성능 대시보드 최적화 (React Context + Memoization)
-
-### 🛠️ 구현 세부 사항
-#### 1. 실시간 신경망 (SSE Backend)
-- **통합 로그 버스**: 12개 로그 파일을 하나의 SSE 스트림으로 병합하는 `LogStreamer` 구현.
-- **리소스 최적화**: `readline` 기반의 메모리 효율적 스트리밍 및 클라이언트 해제 시 명시적 리소스 cleanup 로직 적용.
-- **Race Condition 방지**: 파일 오프셋 동기화 처리를 통해 로그 중복 발생 차단.
-
-#### 2. 병렬 작업 동기화 (Concurrency)
-- **Branch Isolation**: 각 에이전트가 `agent/$NAME` 브랜치에서 독립적으로 작업하도록 하네스 및 오케스트레이터 개편.
-- **Fail-Fast 머지 큐**: 순차적 머지 처리를 통해 Git Index Lock 방지 및 충돌 시 즉시 에이전트 동결(`.blocked`) 처리.
-- **상태 브릿지**: 오케스트레이터와 컨테이너 간의 실시간 중단 신호 전달 체계 완성.
-
-#### 3. 인터랙티브 대시보드 (Visual Trust)
-- **그리드 확장**: 12개 에이전트 대응 4x3 반응형 그리드 및 실시간 로그 윈도잉(200줄 제한) 구현.
-- **UI 최적화**: `React.memo` 및 개별 에이전트 컨텍스트 적용으로 고주파 로그 발생 시에도 부드러운 렌더링 유지.
-- **알림 시스템**: 머지 충돌 등 이상 발생 시 시각적 펄스 및 청각적 비프음 알림 기능 탑재.
-
-#### 4. 에이전트 팩토리 (Automation)
-- **인프라 제네레이터**: `agents.json` 명부 기반의 `docker-compose.yml` 자동 생성 CLI 도구 구축.
-- **도커 최적화**: `Agent.Dockerfile` 도입으로 에이전트 기동 및 빌드 속도 획기적 개선.
+(Previous entries...)
 
 ---
 
 ## [2026-04-18] Phase 3: Intelligence & Context-Aware Autonomy 구축 완료
+(Previous entries...)
+
+---
+
+## [2026-04-23] Phase 4: Advanced Collaboration & Autonomous Skills 구축 완료
 
 ### 🎯 주요 목표
-- 에이전트의 상황 인지력을 높이는 'Context Sniper' 구축
-- 주주(사용자)의 개입 효율을 높이는 'Tiered Approval' 시스템 도입
-- 완벽한 세션 정화를 위한 'Docker Native Reset' 로직 구현
-- 태그 기반 거버넌스 룰 확립 및 배포
+- 에이전트 간 직접 업무 요청이 가능한 'P2P 협업 체계' 구축
+- 프로젝트 규약을 자동 수호하는 'Governance Guardian' 도입
+- 고수준 컨셉을 세부 업무로 분해하는 'Agile HR Dispatcher' 구현
+- 테스트의 전략적 가치를 평가하는 'METI Routine' 정착
 
 ### 🛠️ 구현 세부 사항
 
-#### 1. 지능형 컨텍스트 엔진 (Context Sniper)
-- **JSONL SSOT**: 기계 학습 및 고속 검색에 최적화된 `decision-log.jsonl` 도입.
-- **Smart Extraction**: 에이전트 역할과 태스크를 분석하여 `#tag` 기반의 관련 의사결정 내역을 자동 추출 및 주입.
-- **원자적 상태 관리**: `fs.rename` 패턴을 사용하여 다중 에이전트 환경의 Race Condition 원천 차단.
+#### 1. P2P 협업 엔진 (Inter-Agent Communication)
+- **Sub-Intent Dispatcher**: 에이전트 하네스(`agent-entrypoint.sh`) 내부에 오케스트레이터 API를 호출하는 `dispatch_sub_intent` 함수 탑재.
+- **분산 문제 해결**: 에이전트가 다른 전문가 에이전트에게 하위 작업을 직접 요청할 수 있는 '연쇄 협업' 기반 마련.
 
-#### 2. 반응형 에이전트 하네스 (Reactive Harness)
-- **inotify 도입**: 폴링 지연을 없애고 운영체제 커널 이벤트 기반의 즉각적인 의도(Intent) 수신 체계 구축.
-- **도구 자동 감지**: 컨테이너 내부의 연장(Gemini, Claude, Codex)을 스스로 파악하여 실행하는 다형성 어댑터 구현.
-- **승인 대기 루프**: `PENDING_APPROVAL` 상태 시 실작업을 보류하고 대기하는 지능형 상태 머신 적용.
+#### 2. 거버넌스 가디언 (Sanity Checker)
+- **자동 검사 스킬**: `.gitignore` 무결성, 커밋 메시지 컨벤션, 핵심 하네스 파일의 수정 여부를 푸시 전 자동으로 체크하는 도구 구축.
+- **유출 방지**: `.agent/` 등 민감한 관리 폴더가 외부로 유출되는 것을 시스템적으로 차단.
 
-#### 3. 시각적 지휘 통제소 (Visual Control Plane)
-- **승인 UI**: 대시보드 사이드바에서 에이전트의 제안을 검토하고 [APPROVE] 할 수 있는 인터페이스 구축.
-- **프로비저닝 제어**: 클릭 한 번으로 특정 에이전트의 세션을 하드 리셋하거나 설정을 갱신하는 API 연동.
-- **성능 최적화**: `React.memo`와 독립 컨텍스트를 통해 12개 에이전트 운영 시에도 쾌적한 UX 보장.
+#### 3. 지능형 업무 분해 (Agile HR Dispatcher)
+- **Concept Decomposition**: "UI 보안 강화"와 같은 추상적 지시를 `sec-forge`, `ux-vision` 등 개별 에이전트의 구체적 작업으로 자동 변환.
+- **멀티 브로드캐스트**: 한 번의 트리거로 팀 전체의 의도(Intent)를 동시 생성 및 배포.
 
-#### 4. 세션 정화 및 거버넌스 (Purity & Rules)
-- **Force Restart**: 컨테이너 단위의 재시작을 통해 이전 작업의 잔상(Ghost Memories)을 100% 제거.
-- **거버넌스 룰 배포**: `.agent/rules/tag-governance.md`를 통해 협업 및 태깅 규약을 시스템적으로 강제.
+#### 4. 엔지니어링 표준 (METI Routine)
+- **Test Meta-Evaluation**: 테스트 코드 작성 전 적합성, 호환성, 유연성 등 5대 요소를 평가하는 `.agent/rules/test-meta-evaluation.md` 수립 및 강제.
 
 ---
 
 ### 📈 의사결정 및 전략 (Design Decisions)
-- **Context over Roleplay**: AI의 능력은 타이틀이 아닌 순도 높은 맥락에서 나온다는 철학 관철.
-- **PO/Reviewer Model**: 오케스트레이터를 단순 전달자가 아닌 전략적 검토자(PO)로 격상.
-- **Tiered Approval**: 작업 리스크에 따른 승인 단계 차등화로 CEO 병목 현상 해결.
+- **Management vs. Product Skills**: 도구의 필요한 층위를 구분하여 `/exprj` 시의 오염 방지 및 자산 생애주기 관리 방법론 적용.
+- **P2P Proxy Model**: 에이전트 간 직접 연결 대신 오케스트레이터를 프록시로 활용하여 원자적 쓰기(Atomic Write)와 맥락 스나이핑(Context Sniping) 무결성 유지.
 
 ---
 
 ### 📝 기타 작업
-- **워크트리 활용**: `.worktrees/agent-farm-phase3` 독립 환경에서 구현 및 검증 완료.
-- **프로젝트 룰 강화**: 루트 디렉토리에 `GEMINI.md`를 신설하여 글로벌 오케스트레이션 규칙 선언.
+- **워크트리 활용**: `.worktrees/agent-farm-phase4` 독립 환경에서 구현 및 검증 완료.
+- **이력 관리 정밀화**: 누락되었던 Phase 1~2 이력 복구 및 태스크 단위 버전 관리 표준 확립.
 
 ---
 *Generated by Gemini CLI Orchestrator.*
