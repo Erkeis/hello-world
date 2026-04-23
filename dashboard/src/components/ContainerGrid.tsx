@@ -1,37 +1,27 @@
-// [Intent] Provides a structural scaffold for the 12 containers in a 4x3 grid (2026-04-16)
-import React from 'react';
+// [Intent] Orchestrates the rendering of the agent grid. 
+// Uses the agent record from context to pass individual agent data to memoized cells (2026-04-17).
+
+import React, { useCallback } from 'react';
+import AgentCell from './AgentCell';
+import { useAgents } from '../context/AgentContext';
 
 const ContainerGrid: React.FC = () => {
-  const containers = Array.from({ length: 12 }, (_, i) => ({
-    id: i + 1,
-    name: `Container ${i + 1}`,
-  }));
+  const { agents, selectedAgentId, setSelectedAgentId } = useAgents();
+  const agentIds = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const handleSelect = useCallback((id: number) => {
+    setSelectedAgentId(id);
+  }, [setSelectedAgentId]);
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gridTemplateRows: 'repeat(3, 1fr)',
-      gap: '1rem',
-      padding: '1rem',
-      height: '80vh',
-      backgroundColor: '#16171d'
-    }}>
-      {containers.map((container) => (
-        <div
-          key={container.id}
-          style={{
-            border: '2px dashed #2e303a',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#1f2028',
-            color: '#9ca3af'
-          }}
-        >
-          {container.name}
-        </div>
+    <div className="container-grid">
+      {agentIds.map((id) => (
+        <AgentCell 
+          key={id} 
+          agent={agents[id]} 
+          isSelected={selectedAgentId === id}
+          onSelect={handleSelect}
+        />
       ))}
     </div>
   );

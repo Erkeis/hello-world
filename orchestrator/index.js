@@ -1,10 +1,41 @@
 // [Intent] Orchestrator API for broadcasting and managing agentic behavioral intents across the farm. (2025-04-16)
 const express = require('express');
+const config = require('./config');
+const logStreamer = require('./lib/log-streamer');
+const mergeManager = require('./lib/merge-manager');
 const { injectIntent } = require('./lib/intent-manager');
-const { getLatestAgentUpdates } = require('./lib/git-monitor');
+const { getLatestAgentUpdates, startBranchWatcher } = require('./lib/git-monitor');
 
 const app = express();
 app.use(express.json());
+
+// [Intent] Start the unified log bus. (2026-04-17)
+logStreamer.start();
+
+// [Intent] Start the branch watcher to automatically trigger merges. (2026-04-17)
+startBranchWatcher();
+
+// [Intent] Unified SSE endpoint for streaming logs from all agents. (2026-04-17)
+app.get('/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  // [Intent] Send an initial heartbeat/connection confirmation.
+  res.write(`data: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`);
+
+  const onLog = (log) => {
+    res.write(`data: ${JSON.stringify({ type: 'log', ...log })}\n\n`);
+  };
+
+  logStreamer.on('log', onLog);
+
+  // [Intent] Ensure explicit cleanup on client disconnect to prevent memory leaks. (2026-04-17)
+  req.on('close', () => {
+    logStreamer.removeListener('log', onLog);
+  });
+});
 
 // [Intent] Expose agent status updates derived from Git commit history. (2025-04-16)
 app.get('/status', async (req, res) => {
@@ -36,4 +67,29 @@ app.post('/broadcast', async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log('Orchestrator API running on port 3000'));
+// [Intent] API endpoint for Stakeholder (User) to approve a pending agent proposal. (2026-04-18)
+const { setStatusApproved } = require('./lib/intent-manager');
+const { agileReset } = require('./lib/session-manager');
+
+app.post('/agent/:id/approve', async (req, res) => {
+  const { id } = req.params;
+  const result = await setStatusApproved(id);
+  if (result.success) {
+    res.send({ status: 'APPROVED', agentId: id });
+  } else {
+    res.status(404).send({ error: result.error });
+  }
+});
+
+// [Intent] API endpoint to trigger a manual session reset and re-provisioning of an agent. (2026-04-18)
+app.post('/agent/:id/provision', async (req, res) => {
+  const { id } = req.params;
+  const result = await agileReset(id);
+  if (result.success) {
+    res.send({ status: 'PROVISIONING_STARTED', agentId: id });
+  } else {
+    res.status(500).send({ error: "Failed to reset agent", details: result.error });
+  }
+});
+
+app.listen(config.port, () => console.log(`Orchestrator API running on port ${config.port}`));

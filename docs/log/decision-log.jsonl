@@ -1,0 +1,4 @@
+{"date": "2026-04-16", "tags": ["#security", "#auth"], "decision": "Use simple secret token for initial dashboard API authentication."}
+{"date": "2026-04-17", "tags": ["#infrastructure", "#docker"], "decision": "Migrate to Docker Compose V2 for Ubuntu 24.04 compatibility."}
+{"date": "2026-04-17", "tags": ["#frontend", "#perf"], "decision": "Implement React Context and React.memo to isolate agent cell re-renders."}
+{"date": "2026-04-18", "tags": ["#governance", "#tags"], "decision": "Enforce mandatory #tagging for all entries in decision-log.jsonl."}

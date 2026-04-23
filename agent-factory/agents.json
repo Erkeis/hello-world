@@ -1,0 +1,14 @@
+[
+  { "name": "sec-forge", "role": "security", "port": 8001 },
+  { "name": "qa-scout", "role": "qa", "port": 8002 },
+  { "name": "front-pilot", "role": "frontend", "port": 8003 },
+  { "name": "back-builder", "role": "backend", "port": 8004 },
+  { "name": "auth-shield", "role": "auth", "port": 8005 },
+  { "name": "data-miner", "role": "data", "port": 8006 },
+  { "name": "deploy-hawk", "role": "devops", "port": 8007 },
+  { "name": "ux-vision", "role": "design", "port": 8008 },
+  { "name": "test-runner", "role": "testing", "port": 8009 },
+  { "name": "api-proxy", "role": "api", "port": 8010 },
+  { "name": "log-watcher", "role": "monitoring", "port": 8011 },
+  { "name": "cache-master", "role": "performance", "port": 8012 }
+]
