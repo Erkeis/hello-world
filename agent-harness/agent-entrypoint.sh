@@ -20,6 +20,17 @@ fi
 
 echo "🛠️ Capability Detected: $AGENT_TOOL"
 
+# [Intent] CLI Wrapper to enable Peer-to-Peer intent dispatching via the Orchestrator. (2026-04-23)
+dispatch_sub_intent() {
+    local target_role=$1
+    local task=$2
+    # [Intent] Use host.docker.internal to reach the host-bound orchestrator from inside the container.
+    # Note: host.docker.internal works on Docker Desktop (Windows/Mac) and can be configured on Linux.
+    curl -s -X POST http://host.docker.internal:3000/broadcast \
+         -H "Content-Type: application/json" \
+         -d "{\"role\": \"$target_role\", \"task\": \"$task\"}"
+}
+
 run_task() {
     local task=$1
     local context_file=$2

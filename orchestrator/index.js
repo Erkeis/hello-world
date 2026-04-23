@@ -92,4 +92,4 @@ app.post('/agent/:id/provision', async (req, res) => {
   }
 });
 
-app.listen(config.port, () => console.log(`Orchestrator API running on port ${config.port}`));
+app.listen(config.port, '0.0.0.0', () => console.log(`Orchestrator API running on port ${config.port}`));
