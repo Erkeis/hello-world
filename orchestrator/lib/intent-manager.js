@@ -87,4 +87,30 @@ async function setStatusApproved(role) {
   return { success: false, error: 'Intent file not found' };
 }
 
-module.exports = { injectIntent, setStatusApproved };
+/**
+ * Validates a standardized agent report. (2025-04-18)
+ * @param {object} report - The report object.
+ * @returns {{isValid: boolean, errors?: string[]}}
+ */
+function validateReport(report) {
+  // [Intent] Enforce strict standardized report format to ensure downstream consumers (human or AI) have reliable data.
+  const mandatoryFields = ['agentId', 'finding', 'evidence', 'risk', 'next_step'];
+  const errors = [];
+
+  if (!report || typeof report !== 'object') {
+    return { isValid: false, errors: ['Report must be an object'] };
+  }
+
+  for (const field of mandatoryFields) {
+    if (!report[field] || typeof report[field] !== 'string') {
+      errors.push(`'${field}' is mandatory and must be a string`);
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+module.exports = { injectIntent, setStatusApproved, validateReport };

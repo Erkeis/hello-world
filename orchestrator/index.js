@@ -3,7 +3,7 @@ const express = require('express');
 const config = require('./config');
 const logStreamer = require('./lib/log-streamer');
 const mergeManager = require('./lib/merge-manager');
-const { injectIntent } = require('./lib/intent-manager');
+const { injectIntent, validateReport } = require('./lib/intent-manager');
 const { getLatestAgentUpdates, startBranchWatcher } = require('./lib/git-monitor');
 
 const app = express();
@@ -92,4 +92,26 @@ app.post('/agent/:id/provision', async (req, res) => {
   }
 });
 
-app.listen(config.port, '0.0.0.0', () => console.log(`Orchestrator API running on port ${config.port}`));
+// [Intent] API endpoint for agents to submit structured findings. (2025-04-18)
+app.post('/report', (req, res) => {
+  const validation = validateReport(req.body);
+
+  if (!validation.isValid) {
+    // [Intent] Reject non-standard reports immediately to maintain ecosystem purity.
+    return res.status(400).send({
+      error: 'Invalid Report Format',
+      details: validation.errors
+    });
+  }
+
+  // [Intent] Log the standardized report for auditability. In a real production system, this would be appended to a database or decision-log.jsonl.
+  console.log('[Orchestrator] Standardized Report Received:', JSON.stringify(req.body, null, 2));
+  
+  res.send({ status: 'Report Accepted', timestamp: new Date().toISOString() });
+});
+
+if (require.main === module) {
+  app.listen(config.port, '0.0.0.0', () => console.log(`Orchestrator API running on port ${config.port}`));
+}
+
+module.exports = app;
