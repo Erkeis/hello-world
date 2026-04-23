@@ -12,4 +12,6 @@
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh

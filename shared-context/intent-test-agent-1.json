@@ -1,0 +1,11 @@
+{
+  "role": "test-agent-1",
+  "task": "Explore the codebase",
+  "tags": [],
+  "context": [],
+  "riskLevel": 1,
+  "mode": "READ_ONLY",
+  "response_schema": "STANDARD_REPORT",
+  "status": "APPROVED",
+  "timestamp": "2026-04-23T04:20:15.539Z"
+}

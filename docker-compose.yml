@@ -14,6 +14,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   qa-scout:
@@ -30,6 +32,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   front-pilot:
@@ -46,6 +50,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   back-builder:
@@ -62,6 +68,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   auth-shield:
@@ -78,6 +86,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   data-miner:
@@ -94,6 +104,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   deploy-hawk:
@@ -110,6 +122,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   ux-vision:
@@ -126,6 +140,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   test-runner:
@@ -142,6 +158,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   api-proxy:
@@ -158,6 +176,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   log-watcher:
@@ -174,6 +194,8 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 
   cache-master:
@@ -190,5 +212,7 @@ services:
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash /app/repo/agent-harness/agent-entrypoint.sh
 

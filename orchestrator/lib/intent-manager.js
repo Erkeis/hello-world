@@ -10,9 +10,11 @@ const SHARED_PATH = path.join(__dirname, '../../shared-context');
  * @param {string} role - The role of the agent (sanitized to alphanumeric and hyphens).
  * @param {string} task - The task description.
  * @param {string[]} additionalTags - Optional explicit tags.
+ * @param {string} mode - Optional execution mode (READ_ONLY or READ_WRITE).
+ * @param {string} response_schema - Optional response schema name.
  * @returns {Promise<{success: boolean, error?: string}>}
  */
-async function injectIntent(role, task, additionalTags = []) {
+async function injectIntent(role, task, additionalTags = [], mode = 'READ_ONLY', response_schema = 'STANDARD_REPORT') {
   // [Intent] Sanitize role to prevent path traversal attacks by restricting characters to alphanumeric and hyphens.
   const sanitizedRole = role.replace(/[^a-zA-Z0-9-]/g, '');
   
@@ -40,6 +42,8 @@ async function injectIntent(role, task, additionalTags = []) {
     tags,
     context,
     riskLevel,
+    mode,
+    response_schema,
     status: riskLevel === 3 ? 'PENDING_APPROVAL' : 'APPROVED',
     timestamp: new Date().toISOString()
   };
@@ -87,4 +91,30 @@ async function setStatusApproved(role) {
   return { success: false, error: 'Intent file not found' };
 }
 
-module.exports = { injectIntent, setStatusApproved };
+/**
+ * Validates a standardized agent report. (2025-04-18)
+ * @param {object} report - The report object.
+ * @returns {{isValid: boolean, errors?: string[]}}
+ */
+function validateReport(report) {
+  // [Intent] Enforce strict standardized report format to ensure downstream consumers (human or AI) have reliable data.
+  const mandatoryFields = ['agentId', 'finding', 'evidence', 'risk', 'next_step'];
+  const errors = [];
+
+  if (!report || typeof report !== 'object') {
+    return { isValid: false, errors: ['Report must be an object'] };
+  }
+
+  for (const field of mandatoryFields) {
+    if (!report[field] || typeof report[field] !== 'string') {
+      errors.push(`'${field}' is mandatory and must be a string`);
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+module.exports = { injectIntent, setStatusApproved, validateReport };
