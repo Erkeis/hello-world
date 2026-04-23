@@ -2,22 +2,193 @@ version: '3.8'
 services:
   sec-forge:
     container_name: sec-forge
-    image: node:20-slim
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - IDENTITY=sec-forge
+      - ROLE=security
+      - PORT=8001
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
-    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
   qa-scout:
     container_name: qa-scout
-    image: node:20-slim
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - IDENTITY=qa-scout
+      - ROLE=qa
+      - PORT=8002
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
-    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
   front-pilot:
     container_name: front-pilot
-    image: node:20-slim
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8003:8003"
+    environment:
+      - IDENTITY=front-pilot
+      - ROLE=frontend
+      - PORT=8003
     volumes:
       - ./shared-context:/app/shared
       - .:/app/repo
-    command: sh -c "apt update && apt install -y git && tail -f /dev/null"
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  back-builder:
+    container_name: back-builder
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8004:8004"
+    environment:
+      - IDENTITY=back-builder
+      - ROLE=backend
+      - PORT=8004
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  auth-shield:
+    container_name: auth-shield
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8005:8005"
+    environment:
+      - IDENTITY=auth-shield
+      - ROLE=auth
+      - PORT=8005
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  data-miner:
+    container_name: data-miner
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8006:8006"
+    environment:
+      - IDENTITY=data-miner
+      - ROLE=data
+      - PORT=8006
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  deploy-hawk:
+    container_name: deploy-hawk
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8007:8007"
+    environment:
+      - IDENTITY=deploy-hawk
+      - ROLE=devops
+      - PORT=8007
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  ux-vision:
+    container_name: ux-vision
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8008:8008"
+    environment:
+      - IDENTITY=ux-vision
+      - ROLE=design
+      - PORT=8008
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  test-runner:
+    container_name: test-runner
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8009:8009"
+    environment:
+      - IDENTITY=test-runner
+      - ROLE=testing
+      - PORT=8009
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  api-proxy:
+    container_name: api-proxy
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8010:8010"
+    environment:
+      - IDENTITY=api-proxy
+      - ROLE=api
+      - PORT=8010
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  log-watcher:
+    container_name: log-watcher
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8011:8011"
+    environment:
+      - IDENTITY=log-watcher
+      - ROLE=monitoring
+      - PORT=8011
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
+  cache-master:
+    container_name: cache-master
+    build:
+      context: .
+      dockerfile: agent-factory/Agent.Dockerfile
+    ports:
+      - "8012:8012"
+    environment:
+      - IDENTITY=cache-master
+      - ROLE=performance
+      - PORT=8012
+    volumes:
+      - ./shared-context:/app/shared
+      - .:/app/repo
+    command: bash /app/repo/agent-harness/agent-entrypoint.sh
+
